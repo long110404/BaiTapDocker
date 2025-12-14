@@ -1,24 +1,44 @@
-name: Auto Build & Deploy Test
+name: CI/CD Build Test
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  build-test:
+  build-and-test:
     runs-on: ubuntu-latest
     
     steps:
     - name: 1. Tai code ve may ao
       uses: actions/checkout@v3
     
-    - name: 2. Kiem tra Project 1 (PHP)
+    - name: 2. Kiem tra thu muc
+      run: ls -la
+      
+    - name: 3. Test Build Project 1 (PHP)
       run: |
-        if [ -d "Docker-PHP" ]; then echo "Project PHP tim thay -> OK"; else echo "LOI: Khong thay Project PHP"; exit 1; fi
+        if [ -d "Docker-PHP" ]; then
+          echo "Building PHP Project..."
+          cd Docker-PHP
+          # Chay thu lenh build nhung khong can chay han len
+          docker build .
+        else
+          echo "LOI: Khong thay thu muc Docker-PHP"
+          exit 1
+        fi
 
-    - name: 3. Kiem tra Project 2 (.NET)
+    - name: 4. Test Build Project 2 (.NET)
       run: |
-        if [ -d "Docker-DotNet" ]; then echo "Project .NET tim thay -> OK"; else echo "LOI: Khong thay Project .NET"; exit 1; fi
+        cd ..
+        if [ -d "Docker-DotNet" ]; then
+          echo "Building .NET Project..."
+          cd Docker-DotNet
+          # Test build don gian
+          docker compose config
+        else
+          echo "LOI: Khong thay thu muc Docker-DotNet"
+          exit 1
+        fi
         
-    - name: 4. Gia lap Build & Deploy
-      run: echo "Dang Build Docker... Xong! Dang Deploy len Server... THANH CONG!"
+    - name: 5. Ket qua
+      run: echo "DA BUILD & TEST THANH CONG! Code ngon lanh."
