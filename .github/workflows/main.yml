@@ -1,0 +1,24 @@
+name: Auto Build & Deploy Test
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 1. Tai code ve may ao
+      uses: actions/checkout@v3
+    
+    - name: 2. Kiem tra Project 1 (PHP)
+      run: |
+        if [ -d "Docker-PHP" ]; then echo "Project PHP tim thay -> OK"; else echo "LOI: Khong thay Project PHP"; exit 1; fi
+
+    - name: 3. Kiem tra Project 2 (.NET)
+      run: |
+        if [ -d "Docker-DotNet" ]; then echo "Project .NET tim thay -> OK"; else echo "LOI: Khong thay Project .NET"; exit 1; fi
+        
+    - name: 4. Gia lap Build & Deploy
+      run: echo "Dang Build Docker... Xong! Dang Deploy len Server... THANH CONG!"
