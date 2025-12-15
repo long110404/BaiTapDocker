@@ -1,15 +1,22 @@
 version: '3.8'
 services:
   web:
-    build: .
+    image: php:8.1-apache # Dùng PHP 8.1 kèm Apache
+    container_name: docker-php-web-1
+    restart: always
     ports:
-      - "8080:80"
+      - "3000:80" 
     volumes:
-      - ./src:/var/www/html
+      - ./src:/var/www/html/ # Ánh xạ code từ thư mục 'src'
     depends_on:
-      - db
+      - db 
+
   db:
-    image: mysql:5.7
+    image: mysql:8.0 # <-- Đảm bảo dòng này phải CÓ, để chạy bản MySQL mới
+    container_name: docker-php-db-1
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: matkhau123
-      MYSQL_DATABASE: thuc_tap_db
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: ban_sach 
+    volumes:
+      - ./ban_sach.sql:/docker-entrypoint-initdb.d/ban_sach.sql # Nạp SQL
